@@ -407,7 +407,7 @@ st.title("🌾 Simulações - \"E se?\"")
 
 
 # ===== Parâmetros fixos =====
-AREA_TOTAL_HA = 962.70
+AREA_TOTAL_HA = 1097.74
 peso_caixa_kg = 4.0
 
 
