@@ -35,7 +35,7 @@ with st.sidebar:
     preco_venda_euro = st.number_input("Preço Venda (€/Cx)",        min_value=1.0,         max_value=10.0,        value=4.5,         step=0.1,     format="%.2f")
     cambio           = st.number_input("Câmbio (R$)",               min_value=3.0,         max_value=8.0,         value=6.0,         step=0.05,    format="%.2f")
     custo_campo_kg   = st.number_input("R$/Kg Campo",               min_value=0.5,         max_value=5.0,         value=1.90,        step=0.1,     format="%.2f")
-    refugo           = st.number_input("% Refugo",                  min_value=0.01,        max_value=0.20,        value=0.0808,      step=0.01,    format="%.4f")
+    refugo           = st.number_input("% Refugo",                  min_value=0.01,        max_value=0.20,        value=0.080,       step=0.01,    format="%.4f")
     custo_packing    = st.number_input("R$/Cx Packing",             min_value=1.0,         max_value=15.0,        value=4.9,         step=0.1,     format="%.2f")
     desp_adm_cx      = st.number_input("Desp. Adm (R$/Cx)",        min_value=0.0,         max_value=10.0,        value=2.3,         step=0.1,     format="%.2f")
     desp_fin_cx      = st.number_input("Desp. Financeira (R$/Cx)", min_value=0.0,         max_value=10.0,        value=1.0,         step=0.1,     format="%.2f")
@@ -150,7 +150,7 @@ PPR_ABR_DEZ     = (LUCRO_ABR_DEZ * 0.10) / valor_folha if valor_folha > 0 else 0
 PRODUT_2024    = PRODUCAO_TON_2024 / HECTARES_2024     if HECTARES_2024     > 0 else 0
 PRODUT_2025    = PRODUCAO_TON_2025 / HECTARES_2025     if HECTARES_2025     > 0 else 0
 PRODUT_JAN_MAR = PRODUTIVIDADE_JAN_MAR                 # 51.46 ton/ha realizado
-PRODUT_ABR_DEZ = produtividade                          # sidebar (ton/ha projetado)
+PRODUT_ABR_DEZ = prod_abr_dez_ton_liq / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha líquida
 PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA     if AREA_TOTAL_HA    > 0 else 0  # total ano
 
 SHOW_2026_TOTAL = True
@@ -388,7 +388,7 @@ if _exp_o:
     render_row("Caixas",                 CAIXAS_2024,       CAIXAS_2025,       CAIXAS_JAN_MAR,       qtd_caixas_abr_dez,   CAIXAS_2026,       fmt="num", bg_label=BG_OPE)
     render_row("Producao (ton)",         PRODUCAO_TON_2024, PRODUCAO_TON_2025, PRODUCAO_JAN_MAR_TON, prod_abr_dez_ton_liq, PRODUCAO_TON_2026, fmt="num", bg_label=BG_OPE)
     render_row("Produtividade (Ton/Ha)", PRODUT_2024,       PRODUT_2025,       PRODUT_JAN_MAR,       PRODUT_ABR_DEZ,       PRODUT_2026,       fmt="dec", bg_label=BG_OPE)
-    render_row("Hectares",               HECTARES_2024,     HECTARES_2025,     HECTARES_FECHADOS,    HECTARES_RESTANTES,   AREA_TOTAL_HA,     fmt="num", bg_label=BG_OPE)
+    render_row("Hectares",               HECTARES_2024,     HECTARES_2025,     HECTARES_FECHADOS,    HECTARES_RESTANTES,   AREA_TOTAL_HA,     fmt="dec", bg_label=BG_OPE)
 
 st.divider()
 

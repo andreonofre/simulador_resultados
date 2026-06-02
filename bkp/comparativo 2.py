@@ -150,7 +150,7 @@ PPR_ABR_DEZ     = (LUCRO_ABR_DEZ * 0.10) / valor_folha if valor_folha > 0 else 0
 PRODUT_2024    = PRODUCAO_TON_2024 / HECTARES_2024     if HECTARES_2024     > 0 else 0
 PRODUT_2025    = PRODUCAO_TON_2025 / HECTARES_2025     if HECTARES_2025     > 0 else 0
 PRODUT_JAN_MAR = PRODUTIVIDADE_JAN_MAR                 # 51.46 ton/ha realizado
-PRODUT_ABR_DEZ = produtividade                          # sidebar (ton/ha projetado)
+PRODUT_ABR_DEZ = prod_abr_dez_ton_liq / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha líquida
 PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA     if AREA_TOTAL_HA    > 0 else 0  # total ano
 
 SHOW_2026_TOTAL = True
