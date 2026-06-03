@@ -24,12 +24,12 @@ st.title("📊 Comparativo de Anos")
 
 
 # ================================================================
-# ⚙️ PARÂMETROS DA PROJEÇÃO 2026 (Abr-Dez) — SIDEBAR
+# ⚙️ PARÂMETROS DA PROJEÇÃO 2026 (Mai-Dez) — SIDEBAR
 # Estes parâmetros afetam APENAS esta página de comparativo.
 # ================================================================
 with st.sidebar:
     st.header("⚙️ Parâmetros 2026")
-    st.caption("Afetam apenas a projeção Abr-Dez de 2026 nesta página.")
+    st.caption("Afetam apenas a projeção Mai-Dez de 2026 nesta página.")
     st.divider()
     produtividade    = st.number_input("Produtividade Ton/ha",      min_value=10.0,        max_value=50.0,        value=35.00,       step=0.1,     format="%.2f")
     preco_venda_euro = st.number_input("Preço Venda (€/Cx)",        min_value=1.0,         max_value=10.0,        value=4.5,         step=0.1,     format="%.2f")
@@ -45,8 +45,8 @@ with st.sidebar:
     _sidebar_cols = [
         ("show_col_2024",   "2024"),
         ("show_col_2025",   "2025"),
-        ("show_col_26r",    "Jan-Mar"),
-        ("show_col_26p",    "Abr-Dez"),
+        ("show_col_26r",    "Jan-Abr"),
+        ("show_col_26p",    "Mai-Dez"),
         ("show_2026_total", "2026 Total"),
     ]
     for _sk, _sn in _sidebar_cols:
@@ -88,50 +88,50 @@ PPR_2025          = 2.74            # ← PPR real 2025 (ou calcule: LUCRO_2025 
 
 
 # ================================================================
-# 📅 DADOS 2026 — Jan-Mar REALIZADOS (fixos)
+# 📅 DADOS 2026 — Jan-Abr REALIZADOS (fixos)
 # ================================================================
-FATURAMENTO_JAN_MAR   = 31_782_635.69
-CUSTO_CAMPO_JAN_MAR   = 11_485_738.00
-CUSTO_PH_JAN_MAR      = 11_575_669.17
-CUSTO_ADM_JAN_MAR     = 3_021_077.49
-DESP_FIN_JAN_MAR      = 1_198_102.00
-CAIXAS_JAN_MAR        = 1_198_102
-HECTARES_FECHADOS     = 157.33
-PRODUTIVIDADE_JAN_MAR = 33.6
+FATURAMENTO_JAN_ABR   = 33_340_447.40
+CUSTO_CAMPO_JAN_ABR   = 13_541_397.60
+CUSTO_PH_JAN_ABR      = 6_971_936.19 # Cx Fat. Proprias * Custo PH/Cx
+CUSTO_ADM_JAN_ABR     = 4_106_486.54
+DESP_FIN_JAN_ABR      = 1_274_577.00 
+CAIXAS_JAN_ABR        = 1_274_577 # Caixas Proprias Faturadas
+HECTARES_FECHADOS     = 183.87
+PRODUTIVIDADE_JAN_ABR = 33.1
 AREA_TOTAL_HA         = 1_097.74
-HECTARES_RESTANTES    = 940.41
+HECTARES_RESTANTES    = 913.42
 PESO_CAIXA_KG         = 4.0
 
 
 # ================================================================
-# 🔢 CÁLCULOS 2026 — Abr-Dez PROJETADO
+# 🔢 CÁLCULOS 2026 — Mai-Dez PROJETADO
 # ================================================================
-prod_abr_dez_ton_bruta = HECTARES_RESTANTES * produtividade
-prod_abr_dez_kg_bruta  = prod_abr_dez_ton_bruta * 1000
-prod_abr_dez_ton_liq   = prod_abr_dez_ton_bruta * (1 - refugo)
-qtd_caixas_abr_dez     = (prod_abr_dez_ton_liq * 1000) / PESO_CAIXA_KG
+prod_mai_dez_ton_bruta = HECTARES_RESTANTES * produtividade
+prod_mai_dez_kg_bruta  = prod_mai_dez_ton_bruta * 1000
+prod_mai_dez_ton_liq   = prod_mai_dez_ton_bruta * (1 - refugo)
+qtd_caixas_mai_dez     = (prod_mai_dez_ton_liq * 1000) / PESO_CAIXA_KG
 preco_cx_reais         = preco_venda_euro * cambio
-fat_abr_dez            = qtd_caixas_abr_dez * preco_cx_reais
-custo_campo_abr_dez    = prod_abr_dez_kg_bruta * custo_campo_kg
-custo_ph_abr_dez       = qtd_caixas_abr_dez * custo_packing
-custo_adm_abr_dez      = qtd_caixas_abr_dez * desp_adm_cx
-desp_fin_abr_dez       = qtd_caixas_abr_dez * desp_fin_cx
-custos_abr_dez         = custo_campo_abr_dez + custo_ph_abr_dez + custo_adm_abr_dez + desp_fin_abr_dez
+fat_mai_dez            = qtd_caixas_mai_dez * preco_cx_reais
+custo_campo_mai_dez    = prod_mai_dez_kg_bruta * custo_campo_kg
+custo_ph_mai_dez       = qtd_caixas_mai_dez * custo_packing
+custo_adm_mai_dez      = qtd_caixas_mai_dez * desp_adm_cx
+desp_fin_mai_dez       = qtd_caixas_mai_dez * desp_fin_cx
+custos_mai_dez         = custo_campo_mai_dez + custo_ph_mai_dez + custo_adm_mai_dez + desp_fin_mai_dez
 
 
 # ================================================================
-# 🔢 TOTAIS 2026 (Jan-Mar Real + Abr-Dez Proj)
+# 🔢 TOTAIS 2026 (Jan-Abr Real + Mai-Dez Proj)
 # ================================================================
-FAT_2026          = FATURAMENTO_JAN_MAR + fat_abr_dez
-CUSTO_CAMPO_2026  = CUSTO_CAMPO_JAN_MAR + custo_campo_abr_dez
-CUSTO_PH_2026     = CUSTO_PH_JAN_MAR + custo_ph_abr_dez
-CUSTO_ADM_2026    = CUSTO_ADM_JAN_MAR + custo_adm_abr_dez
-DESP_FIN_2026     = DESP_FIN_JAN_MAR + desp_fin_abr_dez
+FAT_2026          = FATURAMENTO_JAN_ABR + fat_mai_dez
+CUSTO_CAMPO_2026  = CUSTO_CAMPO_JAN_ABR + custo_campo_mai_dez
+CUSTO_PH_2026     = CUSTO_PH_JAN_ABR + custo_ph_mai_dez
+CUSTO_ADM_2026    = CUSTO_ADM_JAN_ABR + custo_adm_mai_dez
+DESP_FIN_2026     = DESP_FIN_JAN_ABR + desp_fin_mai_dez
 CUSTOS_2026       = CUSTO_CAMPO_2026 + CUSTO_PH_2026 + CUSTO_ADM_2026 + DESP_FIN_2026
 LUCRO_2026        = FAT_2026 - CUSTOS_2026
 MARGEM_2026       = (LUCRO_2026 / FAT_2026 * 100) if FAT_2026 > 0 else 0
-CAIXAS_2026       = CAIXAS_JAN_MAR + qtd_caixas_abr_dez
-PRODUCAO_TON_2026 = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_MAR + prod_abr_dez_ton_bruta
+CAIXAS_2026       = CAIXAS_JAN_ABR + qtd_caixas_mai_dez
+PRODUCAO_TON_2026 = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_ABR + prod_mai_dez_ton_bruta
 PPR_2026          = (LUCRO_2026 * 0.10) / valor_folha if valor_folha > 0 else 0
 
 
@@ -148,38 +148,42 @@ LUCRO_2024  = FAT_2024 - CUSTOS_2024
 MARGEM_2024 = (LUCRO_2024 / FAT_2024 * 100) if FAT_2024 > 0 else 0
 
 
-# Totais Jan-Mar 2026 para coluna separada
-CUSTO_TOTAL_JAN_MAR   = CUSTO_CAMPO_JAN_MAR + CUSTO_PH_JAN_MAR + CUSTO_ADM_JAN_MAR + DESP_FIN_JAN_MAR
-LUCRO_JAN_MAR         = FATURAMENTO_JAN_MAR - CUSTO_TOTAL_JAN_MAR
-MARGEM_JAN_MAR        = (LUCRO_JAN_MAR / FATURAMENTO_JAN_MAR * 100) if FATURAMENTO_JAN_MAR > 0 else 0
-PRODUCAO_JAN_MAR_TON  = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_MAR
-PPR_JAN_MAR           = (LUCRO_JAN_MAR * 0.10) / valor_folha if valor_folha > 0 else 0
+# Totais Jan-Abr 2026 para coluna separada
+CUSTO_TOTAL_JAN_ABR   = CUSTO_CAMPO_JAN_ABR + CUSTO_PH_JAN_ABR + CUSTO_ADM_JAN_ABR + DESP_FIN_JAN_ABR
+LUCRO_JAN_ABR         = FATURAMENTO_JAN_ABR - CUSTO_TOTAL_JAN_ABR
+MARGEM_JAN_ABR        = (LUCRO_JAN_ABR / FATURAMENTO_JAN_ABR * 100) if FATURAMENTO_JAN_ABR > 0 else 0
+PRODUCAO_JAN_ABR_TON  = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_ABR
+PPR_JAN_ABR           = (LUCRO_JAN_ABR * 0.10) / valor_folha if valor_folha > 0 else 0
 
-# Totais Abr-Dez 2026 (dinâmico)
-LUCRO_ABR_DEZ   = fat_abr_dez - custos_abr_dez
-MARGEM_ABR_DEZ  = (LUCRO_ABR_DEZ / fat_abr_dez * 100) if fat_abr_dez > 0 else 0
-PPR_ABR_DEZ     = (LUCRO_ABR_DEZ * 0.10) / valor_folha if valor_folha > 0 else 0
+# Totais Mai-Dez 2026 (dinâmico)
+LUCRO_MAI_DEZ   = fat_mai_dez - custos_mai_dez
+MARGEM_MAI_DEZ  = (LUCRO_MAI_DEZ / fat_mai_dez * 100) if fat_mai_dez > 0 else 0
+PPR_MAI_DEZ     = (LUCRO_MAI_DEZ * 0.10) / valor_folha if valor_folha > 0 else 0
 
 # Produtividade Ton/Ha por período
 PRODUT_2024    = PRODUCAO_TON_2024 / HECTARES_2024     if HECTARES_2024     > 0 else 0
 PRODUT_2025    = PRODUCAO_TON_2025 / HECTARES_2025     if HECTARES_2025     > 0 else 0
-PRODUT_JAN_MAR = PRODUTIVIDADE_JAN_MAR                 # 51.46 ton/ha realizado
-PRODUT_ABR_DEZ = prod_abr_dez_ton_bruta / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha bruta
+PRODUT_JAN_ABR = PRODUTIVIDADE_JAN_ABR
+PRODUT_MAI_DEZ = prod_mai_dez_ton_bruta / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha bruta
 PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA             if AREA_TOTAL_HA    > 0 else 0  # total ano bruta
 
 # Refugo %
 REFUGO_PCT_2024    = 9.85
 REFUGO_PCT_2025    = 7.99
-REFUGO_PCT_JAN_MAR = 11.86
-REFUGO_PCT_ABR_DEZ = refugo * 100
-REFUGO_PCT_2026    = refugo * 100
+REFUGO_PCT_JAN_ABR = 10.97
+REFUGO_PCT_MAI_DEZ = refugo * 100
+_ton_bruta_total   = PRODUCAO_JAN_ABR_TON + prod_mai_dez_ton_bruta
+REFUGO_PCT_2026    = (
+    (PRODUCAO_JAN_ABR_TON * REFUGO_PCT_JAN_ABR + prod_mai_dez_ton_bruta * REFUGO_PCT_MAI_DEZ)
+    / _ton_bruta_total
+) if _ton_bruta_total > 0 else 0
 
 # Produtividade Embalada (Ton/Ha) — bruta * (1 - refugo%)
 PRODUT_EMB_2024    = PRODUT_2024    * (1 - REFUGO_PCT_2024    / 100)
 PRODUT_EMB_2025    = PRODUT_2025    * (1 - REFUGO_PCT_2025    / 100)
-PRODUT_EMB_JAN_MAR = PRODUT_JAN_MAR * (1 - REFUGO_PCT_JAN_MAR / 100)
-PRODUT_EMB_ABR_DEZ = PRODUT_ABR_DEZ * (1 - REFUGO_PCT_ABR_DEZ / 100)  # bruta com refugo aplicado
-_prod_ton_liq_2026 = (PRODUCAO_JAN_MAR_TON * (1 - REFUGO_PCT_JAN_MAR / 100)) + prod_abr_dez_ton_liq
+PRODUT_EMB_JAN_ABR = PRODUT_JAN_ABR * (1 - REFUGO_PCT_JAN_ABR / 100)
+PRODUT_EMB_MAI_DEZ = PRODUT_MAI_DEZ * (1 - REFUGO_PCT_MAI_DEZ / 100)  # bruta com refugo aplicado
+_prod_ton_liq_2026 = (PRODUCAO_JAN_ABR_TON * (1 - REFUGO_PCT_JAN_ABR / 100)) + prod_mai_dez_ton_liq
 PRODUT_EMB_2026    = _prod_ton_liq_2026 / AREA_TOTAL_HA if AREA_TOTAL_HA > 0 else 0
 
 # Visibilidade das colunas — controlada pelos botões Ocultar/Exibir
@@ -367,7 +371,7 @@ if SHOW_COL_26R:
     with _hc[_hi]:
         st.markdown(
             f"<div style='border-left:4px solid {ACENTO_26R}; background:{BG_NEUTRO}; padding:8px 10px; border-radius:6px; text-align:center; margin:2px 0;'>"
-            f"<span style='color:{ACENTO_26R}; font-weight:bold; font-size:0.9rem; white-space:nowrap;'>2026 Jan-Mar</span><br>"
+            f"<span style='color:{ACENTO_26R}; font-weight:bold; font-size:0.9rem; white-space:nowrap;'>2026 Jan-Abr</span><br>"
             f"<span style='font-size:0.65rem; opacity:0.55;'>Realizado</span></div>",
             unsafe_allow_html=True)
     _hi += 1
@@ -375,7 +379,7 @@ if SHOW_COL_26P:
     with _hc[_hi]:
         st.markdown(
             f"<div style='border-left:4px solid {ACENTO_26P}; background:{BG_NEUTRO}; padding:8px 10px; border-radius:6px; text-align:center; margin:2px 0;'>"
-            f"<span style='color:{ACENTO_26P}; font-weight:bold; font-size:0.9rem; white-space:nowrap;'>2026 Abr-Dez</span><br>"
+            f"<span style='color:{ACENTO_26P}; font-weight:bold; font-size:0.9rem; white-space:nowrap;'>2026 Mai-Dez</span><br>"
             f"<span style='font-size:0.65rem; opacity:0.55;'>Projetado</span></div>",
             unsafe_allow_html=True)
     _hi += 1
@@ -399,41 +403,41 @@ if SHOW_2026_TOTAL:
 _exp_fat = render_secao("Receita", bg_sec=BG_SEC_FAT, cor_borda="#2e7d32", state_key="expand_receita")
 if _exp_fat:
     render_row("Faturamento",
-               FAT_2024, FAT_2025, FATURAMENTO_JAN_MAR, fat_abr_dez, FAT_2026,
+               FAT_2024, FAT_2025, FATURAMENTO_JAN_ABR, fat_mai_dez, FAT_2026,
                fmt="R$", bg_label=BG_FAT, bold=True)
 
 # ---------- CUSTOS ----------
 _exp_c = render_secao("Custos e Despesas", bg_sec=BG_SEC_CUS, cor_borda="#b45a00", state_key="expand_custos")
 if _exp_c:
-    render_row("Custo Campo",      CUSTO_CAMPO_2024, CUSTO_CAMPO_2025, CUSTO_CAMPO_JAN_MAR, custo_campo_abr_dez, CUSTO_CAMPO_2026, fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
-    render_row("Custo PH",         CUSTO_PH_2024,    CUSTO_PH_2025,    CUSTO_PH_JAN_MAR,    custo_ph_abr_dez,    CUSTO_PH_2026,    fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
-    render_row("Adm. Sede",        CUSTO_ADM_2024,   CUSTO_ADM_2025,   CUSTO_ADM_JAN_MAR,   custo_adm_abr_dez,   CUSTO_ADM_2026,   fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
-    render_row("Desp. Financeira", DESP_FIN_2024,    DESP_FIN_2025,    DESP_FIN_JAN_MAR,    desp_fin_abr_dez,    DESP_FIN_2026,    fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
-render_row("Total Custos",     CUSTOS_2024, CUSTOS_2025, CUSTO_TOTAL_JAN_MAR, custos_abr_dez, CUSTOS_2026, fmt="R$", bg_label=BG_TOTALC, bold=True, var_inverso=True)
+    render_row("Custo Campo",      CUSTO_CAMPO_2024, CUSTO_CAMPO_2025, CUSTO_CAMPO_JAN_ABR, custo_campo_mai_dez, CUSTO_CAMPO_2026, fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
+    render_row("Custo PH",         CUSTO_PH_2024,    CUSTO_PH_2025,    CUSTO_PH_JAN_ABR,    custo_ph_mai_dez,    CUSTO_PH_2026,    fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
+    render_row("Adm. Sede",        CUSTO_ADM_2024,   CUSTO_ADM_2025,   CUSTO_ADM_JAN_ABR,   custo_adm_mai_dez,   CUSTO_ADM_2026,   fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
+    render_row("Desp. Financeira", DESP_FIN_2024,    DESP_FIN_2025,    DESP_FIN_JAN_ABR,    desp_fin_mai_dez,    DESP_FIN_2026,    fmt="R$", bg_label=BG_CUSTO, var_inverso=True)
+render_row("Total Custos",     CUSTOS_2024, CUSTOS_2025, CUSTO_TOTAL_JAN_ABR, custos_mai_dez, CUSTOS_2026, fmt="R$", bg_label=BG_TOTALC, bold=True, var_inverso=True)
 
 # ---------- RESULTADO ----------
 _exp_r = render_secao("Resultado", bg_sec=BG_SEC_RES, cor_borda="#1565c0", state_key="expand_resultado")
 render_row("Lucro Liquido",
-           LUCRO_2024, LUCRO_2025, LUCRO_JAN_MAR, LUCRO_ABR_DEZ, LUCRO_2026,
+           LUCRO_2024, LUCRO_2025, LUCRO_JAN_ABR, LUCRO_MAI_DEZ, LUCRO_2026,
            fmt="R$", bg_label=BG_RES,
            bg_24 =BG_LUCROP if LUCRO_2024    >= 0 else BG_LUCRON,
            bg_25 =BG_LUCROP if LUCRO_2025    >= 0 else BG_LUCRON,
-           bg_26r=BG_LUCROP if LUCRO_JAN_MAR >= 0 else BG_LUCRON,
-           bg_26p=BG_LUCROP if LUCRO_ABR_DEZ >= 0 else BG_LUCRON,
+           bg_26r=BG_LUCROP if LUCRO_JAN_ABR >= 0 else BG_LUCRON,
+           bg_26p=BG_LUCROP if LUCRO_MAI_DEZ >= 0 else BG_LUCRON,
            bg_26t=BG_LUCROP if LUCRO_2026    >= 0 else BG_LUCRON,
            bold=True)
 if _exp_r:
-    render_row("Margem Liquida", MARGEM_2024, MARGEM_2025, MARGEM_JAN_MAR, MARGEM_ABR_DEZ, MARGEM_2026, fmt="%", bg_label=BG_RES)
-    render_row("PPR (10%)",      PPR_2024,    PPR_2025,    PPR_JAN_MAR,    PPR_ABR_DEZ,    PPR_2026,    fmt="x", bg_label=BG_RES)
+    render_row("Margem Liquida", MARGEM_2024, MARGEM_2025, MARGEM_JAN_ABR, MARGEM_MAI_DEZ, MARGEM_2026, fmt="%", bg_label=BG_RES)
+    render_row("PPR (10%)",      PPR_2024,    PPR_2025,    PPR_JAN_ABR,    PPR_MAI_DEZ,    PPR_2026,    fmt="x", bg_label=BG_RES)
 
 # ---------- OPERACIONAL ----------
 _exp_o = render_secao("Operacional", bg_sec=BG_SEC_OPE, cor_borda="#455a64", state_key="expand_operacional")
 if _exp_o:
-    render_row("Caixas",                 CAIXAS_2024,       CAIXAS_2025,       CAIXAS_JAN_MAR,       qtd_caixas_abr_dez,   CAIXAS_2026,       fmt="num", bg_label=BG_OPE)
-    render_row("Producao (ton)",         PRODUCAO_TON_2024, PRODUCAO_TON_2025, PRODUCAO_JAN_MAR_TON, prod_abr_dez_ton_bruta, PRODUCAO_TON_2026, fmt="num", bg_label=BG_OPE)
-    render_row("Produtividade (Ton/Ha)", PRODUT_2024,       PRODUT_2025,       PRODUT_JAN_MAR,       PRODUT_ABR_DEZ,       PRODUT_2026,       fmt="dec", bg_label=BG_OPE)
-    render_row("Prod. Embalado (Ton/Ha)", PRODUT_EMB_2024,  PRODUT_EMB_2025,   PRODUT_EMB_JAN_MAR,   PRODUT_EMB_ABR_DEZ,   PRODUT_EMB_2026,   fmt="dec", bg_label=BG_OPE)
-    render_row("Refugo %",               REFUGO_PCT_2024,   REFUGO_PCT_2025,   REFUGO_PCT_JAN_MAR,   REFUGO_PCT_ABR_DEZ,   REFUGO_PCT_2026,   fmt="pct2", bg_label=BG_OPE, var_inverso=True)
+    render_row("Caixas",                 CAIXAS_2024,       CAIXAS_2025,       CAIXAS_JAN_ABR,       qtd_caixas_mai_dez,   CAIXAS_2026,       fmt="num", bg_label=BG_OPE)
+    render_row("Producao (ton)",         PRODUCAO_TON_2024, PRODUCAO_TON_2025, PRODUCAO_JAN_ABR_TON, prod_mai_dez_ton_bruta, PRODUCAO_TON_2026, fmt="num", bg_label=BG_OPE)
+    render_row("Produtividade (Ton/Ha)", PRODUT_2024,       PRODUT_2025,       PRODUT_JAN_ABR,       PRODUT_MAI_DEZ,       PRODUT_2026,       fmt="dec", bg_label=BG_OPE)
+    render_row("Prod. Embalado (Ton/Ha)", PRODUT_EMB_2024,  PRODUT_EMB_2025,   PRODUT_EMB_JAN_ABR,   PRODUT_EMB_MAI_DEZ,   PRODUT_EMB_2026,   fmt="dec", bg_label=BG_OPE)
+    render_row("Refugo %",               REFUGO_PCT_2024,   REFUGO_PCT_2025,   REFUGO_PCT_JAN_ABR,   REFUGO_PCT_MAI_DEZ,   REFUGO_PCT_2026,   fmt="pct2", bg_label=BG_OPE, var_inverso=True)
     render_row("Hectares",               HECTARES_2024,     HECTARES_2025,     HECTARES_FECHADOS,    HECTARES_RESTANTES,   AREA_TOTAL_HA,     fmt="dec", bg_label=BG_OPE)
 
 st.divider()
