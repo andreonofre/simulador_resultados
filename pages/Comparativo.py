@@ -131,7 +131,7 @@ CUSTOS_2026       = CUSTO_CAMPO_2026 + CUSTO_PH_2026 + CUSTO_ADM_2026 + DESP_FIN
 LUCRO_2026        = FAT_2026 - CUSTOS_2026
 MARGEM_2026       = (LUCRO_2026 / FAT_2026 * 100) if FAT_2026 > 0 else 0
 CAIXAS_2026       = CAIXAS_JAN_MAR + qtd_caixas_abr_dez
-PRODUCAO_TON_2026 = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_MAR + prod_abr_dez_ton_liq
+PRODUCAO_TON_2026 = HECTARES_FECHADOS * PRODUTIVIDADE_JAN_MAR + prod_abr_dez_ton_bruta
 PPR_2026          = (LUCRO_2026 * 0.10) / valor_folha if valor_folha > 0 else 0
 
 
@@ -164,8 +164,23 @@ PPR_ABR_DEZ     = (LUCRO_ABR_DEZ * 0.10) / valor_folha if valor_folha > 0 else 0
 PRODUT_2024    = PRODUCAO_TON_2024 / HECTARES_2024     if HECTARES_2024     > 0 else 0
 PRODUT_2025    = PRODUCAO_TON_2025 / HECTARES_2025     if HECTARES_2025     > 0 else 0
 PRODUT_JAN_MAR = PRODUTIVIDADE_JAN_MAR                 # 51.46 ton/ha realizado
-PRODUT_ABR_DEZ = prod_abr_dez_ton_liq / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha líquida
-PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA     if AREA_TOTAL_HA    > 0 else 0  # total ano
+PRODUT_ABR_DEZ = prod_abr_dez_ton_bruta / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha bruta
+PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA             if AREA_TOTAL_HA    > 0 else 0  # total ano bruta
+
+# Refugo %
+REFUGO_PCT_2024    = 9.85
+REFUGO_PCT_2025    = 7.99
+REFUGO_PCT_JAN_MAR = 11.86
+REFUGO_PCT_ABR_DEZ = refugo * 100
+REFUGO_PCT_2026    = refugo * 100
+
+# Produtividade Embalada (Ton/Ha) — bruta * (1 - refugo%)
+PRODUT_EMB_2024    = PRODUT_2024    * (1 - REFUGO_PCT_2024    / 100)
+PRODUT_EMB_2025    = PRODUT_2025    * (1 - REFUGO_PCT_2025    / 100)
+PRODUT_EMB_JAN_MAR = PRODUT_JAN_MAR * (1 - REFUGO_PCT_JAN_MAR / 100)
+PRODUT_EMB_ABR_DEZ = PRODUT_ABR_DEZ * (1 - REFUGO_PCT_ABR_DEZ / 100)  # bruta com refugo aplicado
+_prod_ton_liq_2026 = (PRODUCAO_JAN_MAR_TON * (1 - REFUGO_PCT_JAN_MAR / 100)) + prod_abr_dez_ton_liq
+PRODUT_EMB_2026    = _prod_ton_liq_2026 / AREA_TOTAL_HA if AREA_TOTAL_HA > 0 else 0
 
 # Visibilidade das colunas — controlada pelos botões Ocultar/Exibir
 SHOW_2026_TOTAL = st.session_state.get("show_2026_total", True)
@@ -255,11 +270,13 @@ def _celula(texto, bg, acento=None, bold=False, align="right"):
 
 
 def _fmt(v, fmt):
-    if fmt == "R$":  return f"R$ {br(v, 0)}"
-    if fmt == "%":   return f"{br(v, 1)}%"
-    if fmt == "num": return br(v, 0)
-    if fmt == "dec": return br(v, 2)
-    if fmt == "x":   return br(v, 2)
+    if v is None: return "-"
+    if fmt == "R$":   return f"R$ {br(v, 0)}"
+    if fmt == "%":    return f"{br(v, 1)}%"
+    if fmt == "pct2": return f"{br(v, 2)}%"
+    if fmt == "num":  return br(v, 0)
+    if fmt == "dec":  return br(v, 2)
+    if fmt == "x":    return br(v, 2)
     return str(v)
 
 
@@ -413,8 +430,10 @@ if _exp_r:
 _exp_o = render_secao("Operacional", bg_sec=BG_SEC_OPE, cor_borda="#455a64", state_key="expand_operacional")
 if _exp_o:
     render_row("Caixas",                 CAIXAS_2024,       CAIXAS_2025,       CAIXAS_JAN_MAR,       qtd_caixas_abr_dez,   CAIXAS_2026,       fmt="num", bg_label=BG_OPE)
-    render_row("Producao (ton)",         PRODUCAO_TON_2024, PRODUCAO_TON_2025, PRODUCAO_JAN_MAR_TON, prod_abr_dez_ton_liq, PRODUCAO_TON_2026, fmt="num", bg_label=BG_OPE)
+    render_row("Producao (ton)",         PRODUCAO_TON_2024, PRODUCAO_TON_2025, PRODUCAO_JAN_MAR_TON, prod_abr_dez_ton_bruta, PRODUCAO_TON_2026, fmt="num", bg_label=BG_OPE)
     render_row("Produtividade (Ton/Ha)", PRODUT_2024,       PRODUT_2025,       PRODUT_JAN_MAR,       PRODUT_ABR_DEZ,       PRODUT_2026,       fmt="dec", bg_label=BG_OPE)
+    render_row("Prod. Embalado (Ton/Ha)", PRODUT_EMB_2024,  PRODUT_EMB_2025,   PRODUT_EMB_JAN_MAR,   PRODUT_EMB_ABR_DEZ,   PRODUT_EMB_2026,   fmt="dec", bg_label=BG_OPE)
+    render_row("Refugo %",               REFUGO_PCT_2024,   REFUGO_PCT_2025,   REFUGO_PCT_JAN_MAR,   REFUGO_PCT_ABR_DEZ,   REFUGO_PCT_2026,   fmt="pct2", bg_label=BG_OPE, var_inverso=True)
     render_row("Hectares",               HECTARES_2024,     HECTARES_2025,     HECTARES_FECHADOS,    HECTARES_RESTANTES,   AREA_TOTAL_HA,     fmt="dec", bg_label=BG_OPE)
 
 st.divider()
