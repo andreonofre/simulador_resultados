@@ -40,20 +40,6 @@ with st.sidebar:
     desp_adm_cx      = st.number_input("Desp. Adm (R$/Cx)",        min_value=0.0,         max_value=10.0,        value=2.3,         step=0.1,     format="%.2f")
     desp_fin_cx      = st.number_input("Desp. Financeira (R$/Cx)", min_value=0.0,         max_value=10.0,        value=1.0,         step=0.1,     format="%.2f")
     valor_folha      = st.number_input("Valor Médio Folha (R$)",   min_value=1_000_000.0, max_value=5_000_000.0, value=2_200_000.0, step=50_000.0, format="%.0f")
-    st.divider()
-    st.caption("Colunas visíveis")
-    _sidebar_cols = [
-        ("show_col_2024",   "2024"),
-        ("show_col_2025",   "2025"),
-        ("show_col_26r",    "Jan-Mar"),
-        ("show_col_26p",    "Abr-Dez"),
-        ("show_2026_total", "2026 Total"),
-    ]
-    for _sk, _sn in _sidebar_cols:
-        _cur = st.session_state.get(_sk, True)
-        _lbl = f"✅ {_sn}" if _cur else f"⬜ {_sn}"
-        if st.button(_lbl, key=f"sbtn_{_sk}", use_container_width=True):
-            st.session_state[_sk] = not _cur; st.rerun()
 
 
 # ================================================================
@@ -167,12 +153,11 @@ PRODUT_JAN_MAR = PRODUTIVIDADE_JAN_MAR                 # 51.46 ton/ha realizado
 PRODUT_ABR_DEZ = prod_abr_dez_ton_liq / HECTARES_RESTANTES  if HECTARES_RESTANTES > 0 else 0  # ton/ha líquida
 PRODUT_2026    = PRODUCAO_TON_2026 / AREA_TOTAL_HA     if AREA_TOTAL_HA    > 0 else 0  # total ano
 
-# Visibilidade das colunas — controlada pelos botões Ocultar/Exibir
-SHOW_2026_TOTAL = st.session_state.get("show_2026_total", True)
-SHOW_COL_2024  = st.session_state.get("show_col_2024",   True)
-SHOW_COL_2025  = st.session_state.get("show_col_2025",   True)
-SHOW_COL_26R   = st.session_state.get("show_col_26r",    True)
-SHOW_COL_26P   = st.session_state.get("show_col_26p",    True)
+SHOW_2026_TOTAL = True
+SHOW_COL_2024  = True
+SHOW_COL_2025  = True
+SHOW_COL_26R   = True
+SHOW_COL_26P   = True
 
 _col_ratios = [1.8]
 if SHOW_COL_2024:  _col_ratios.append(1)
@@ -508,7 +493,7 @@ components.html("""
 
     var blocks = parent.document.querySelectorAll('[data-testid="stHorizontalBlock"]');
     if (!blocks.length) return;
-    var header = blocks[0];  // blocks[0] = cards de cabeçalho
+    var header = blocks[0];
 
     var headerTop = toolbarH + titleH;
     header.style.setProperty('position',      'fixed', 'important');
